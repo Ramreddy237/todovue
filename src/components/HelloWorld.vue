@@ -1,42 +1,71 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank">awesome-vue</a></li>
-    </ul>
+  <div class='ui basic content center aligned segment'>
+    <button class='ui basic button icon' v-on:click="openForm" v-show="!isCreating">
+      <i class='plus icon'></i>
+    </button>
+    <div class='ui centered card' v-show="isCreating">
+      <div class='content'>
+        <div class='ui form'>
+          <div class='field'>
+            <label>title</label>
+            <input v-model="todo_name" type='text'>
+          </div>
+          <div class='field'>
+            <label>description</label>
+            <input v-model="todo_description" type='text'>
+          </div>
+          <div class='ui two button attached buttons'>
+            <button class='ui basic blue button' v-on:click="sendForm()">
+              Create
+            </button>
+            <button class='ui basic red button' v-on:click="closeForm">
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: "CreateTodo",
   props: {
     msg: String
+  },
+  data() {
+    return {
+      todo_name: "",
+      todo_description: "",
+      isCreating: true,
+      done:false
+    };
+  },
+  methods: {
+    openForm() {
+      this.isCreating = true;
+    },
+    closeForm() {
+      this.isCreating = false;
+    },
+    sendForm() {
+      if (this.todo_name.length > 0 && this.todo_description.length > 0) {
+        const todo_name = this.todo_name;
+        const todo_description = this.todo_description;
+        this.$emit("create-todo", {
+          todo_name,
+          todo_description,
+          done: false
+        });
+        this.todo_name = "";
+        this.done=false
+        this.todo_description = "";
+        this.isCreating = false;
+      }
+    }
   }
-}
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
